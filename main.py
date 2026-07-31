@@ -56,3 +56,19 @@ def create_todos(db : db_dependency, new_todo : Todo):
     db.commit()
     
     return JSONResponse(status_code=201, content={'message' : 'To do created successfully'})
+
+@app.put('/edit/{todo_id}')
+def update_todos(db : db_dependency, todo_id : int, update_todo : TodoUpdate):
+
+    todo = db.query(Todos).filter(Todos.id == todo_id).first()
+    if todo is None:
+        raise HTTPException(status_code=404, detail='To do not found')  
+
+    update_data = update_todo.model_dump(exclude_unset=True)
+
+    for key,value in update_data.items():
+        setattr(todo,key,value)
+
+    db.commit()
+
+    return JSONResponse(status_code=200, content={'messege': 'To do updated sucessfully'})
