@@ -57,6 +57,7 @@ def create_todos(db : db_dependency, new_todo : Todo):
     
     return JSONResponse(status_code=201, content={'message' : 'To do created successfully'})
 
+
 @app.put('/edit/{todo_id}')
 def update_todos(db : db_dependency, todo_id : int, update_todo : TodoUpdate):
 
@@ -72,3 +73,16 @@ def update_todos(db : db_dependency, todo_id : int, update_todo : TodoUpdate):
     db.commit()
 
     return JSONResponse(status_code=200, content={'messege': 'To do updated sucessfully'})
+
+@app.delete('/delete/{todo_id}')
+def update_todos(db : db_dependency, todo_id : int):
+
+    todo = db.query(Todos).filter(Todos.id == todo_id).first()
+    if todo is None:
+        raise HTTPException(status_code=404, detail='To do not found')  
+
+    db.query(Todos).filter(Todos.id == todo_id).delete()
+
+    db.commit()
+
+    return JSONResponse(status_code=200, content={'messege': 'To do deleted sucessfully'})
