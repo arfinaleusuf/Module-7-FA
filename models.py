@@ -12,7 +12,7 @@ class Todos(Base):
     completed = Column(Boolean, default=False)
     owner_id = Column(Integer, ForeignKey("users.id"))
 
-class user(Base):
+class Users(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key= True, index=True)
